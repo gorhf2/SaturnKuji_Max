@@ -1,42 +1,42 @@
-name: Build SaturnKuji V9 APK
+name: Build Android APK
 
 on:
-  workflow_dispatch:
   push:
-    branches: ["main", "master"]
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout project
+      uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          validate-wrappers: false
+    # Gradle Wrapper 검증 및 자동 재생성 스텝
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        validate-wrappers: false
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
+    # gradlew 실행 권한 강제 부여
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
-      - name: Build debug APK
-        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+    # APK 빌드 실행
+    - name: Build Debug APK
+      run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
 
-      - name: Verify APK
-        run: |
-          ls -lh app/build/outputs/apk/debug/
-          test -f app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: SaturnKuji_V9_Debug_APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+    # 빌드 결과물(APK) Artifact 업로드
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/debug/app-debug.apk
