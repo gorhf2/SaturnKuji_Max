@@ -20,7 +20,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # 핵심: 누락되거나 깨진 gradle-wrapper.jar 파일을 공식 릴리즈 경로에서 직접 다운로드 받아 복구
+    # 누락된 gradle-wrapper.jar 파일을 공식 서버에서 직접 다운로드 받아 복구
     - name: Restore Missing Gradle Wrapper Jar
       run: |
         mkdir -p gradle/wrapper
